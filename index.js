@@ -79,13 +79,17 @@ app.get("/getuser", (req, res) => {
 });
 
 app.get("/auth/logout", (req, res) => {
-  console.log("here")
-  req.logout();
+  // console.log("here")
+  // req.logout();
 
-  // if (req.user) {
-  //   return res.send("done");
-  // }
-  res.send("logout");
+  // // if (req.user) {
+  // //   return res.send("done");
+  // // }
+  // res.send("logout");
+  req.logout(function(err) {
+    if (err) { return next(err); }
+    res.send("done");
+  });
 });
 
 app.listen(process.env.PORT || 5000, () => {
