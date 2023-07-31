@@ -40,7 +40,8 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "http://localhost:5000/auth/google/callback",
+    //   callbackURL: "http://localhost:5000/auth/google/callback",
+      callbackURL: "https://salon-gg-server.vercel.app/auth/google/callback",
     },
     function (accessToken, refreshToken, profile, cb) {
       return cb(null, profile);
@@ -57,14 +58,14 @@ app.get(
   "/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/register" }),
   function (req, res) {
-    res.redirect("http://localhost:5173");
+    res.redirect("https://salon-gg-client.vercel.app");
   }
 );
 
 app.get('/auth/logout' , (req, res) => {
     req.logout(function(err) {
         if (err) { return next(err); }
-        res.redirect("http://localhost:5173");
+        res.redirect("https://salon-gg-client.vercel.app");
       });
     // req.logOut()
     // res.redirect("http://localhost:5173");
