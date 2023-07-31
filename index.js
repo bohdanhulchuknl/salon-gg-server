@@ -8,11 +8,17 @@ const cors = require("cors");
 const app = express();
 
 app.use(express.static("public"));
+
+app.set('trust proxy', 1);
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
+    cookie: {
+        secure: true,
+        maxAge:60000
+    }
   })
 );
 app.use(bodyParser.urlencoded({ extended: true }));
