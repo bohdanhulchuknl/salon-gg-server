@@ -6,12 +6,7 @@ require("./passport");
 const cors = require("cors");
 const app = express();
 const port = process.env.PORT || 5000;
-app.use(
-  cors({
-    origin: ["http://localhost:5173", "https://salon-gg-client.vercel.app"],
-    credentials: true,
-  })
-);
+
 // express session
 app.use(
   session({
@@ -23,6 +18,13 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "https://salon-gg-client.vercel.app"],
+    credentials: true,
+  })
+);
 
 // Middleware used in protected routes to check if the user has been authenticated
 const isLoggedIn = (req, res, next) => {
