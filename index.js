@@ -79,6 +79,7 @@ app.get("/getuser", (req, res) => {
 });
 
 app.get("/auth/logout", (req, res) => {
+  console.log("here")
   req.logout();
 
   // if (req.user) {
