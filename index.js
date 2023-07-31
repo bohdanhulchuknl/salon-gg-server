@@ -21,7 +21,7 @@ app.use(passport.session());
 
 app.use(
   cors({
-    origin: ["http://localhost:5173"],
+    origin: ["http://localhost:5173", "https://salon-gg-client.vercel.app"],
     credentials: true,
   })
 );
