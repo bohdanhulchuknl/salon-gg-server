@@ -1,88 +1,90 @@
-require("dotenv").config();
-const express = require("express");
-const passport = require("passport");
-const session = require("express-session");
-require("./passport");
-const cors = require("cors");
-const app = express();
-const port = process.env.PORT || 5000;
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
+import session from "express-session";
+import passport from "passport";
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
 
-// express session
+dotenv.config();
+
+const app = express();
+
+// Middleware
+app.use(express.json());
+app.use(
+  cors({ origin: "https://salon-gg-client.vercel.app", credentials: true })
+);
+
+app.set("trust proxy", 1);
+
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
+    secret: "secretcode",
+    resave: true,
+    saveUninitialized: true,
+    cookie: {
+      sameSite: "none",
+      secure: true,
+      maxAge: 1000 * 60 * 60 * 24 * 7, // One Week
+    },
   })
 );
 
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(
-  cors({
-    origin: ["http://localhost:5173", "https://salon-gg-client.vercel.app"],
-    credentials: true,
-  })
-);
-
-// Middleware used in protected routes to check if the user has been authenticated
-const isLoggedIn = (req, res, next) => {
-  if (req.user) {
-    next();
-  } else {
-    res.sendStatus(401);
-  }
-};
-
-// Base route
-app.get("/home", (req, res) => {
-  res.send("Home Page");
+passport.serializeUser((user, done) => {
+  return done(null, user);
 });
 
-// Google Auth consent screen route
-app.get(
-  "/auth/google",
-  passport.authenticate("google", {
-    scope: ["email", "profile"],
-  })
+passport.deserializeUser((user, done) => {
+  return done(null, user);
+});
+
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: `${process.env.GOOGLE_CLIENT_ID}`,
+      clientSecret: `${process.env.GOOGLE_CLIENT_SECRET}`,
+      callbackURL: "/auth/google/callback",
+    },
+    function (_, __, profile, cb) {
+      cb(null, profile);
+    }
+  )
 );
 
-// Call back route
+app.get(
+  "/auth/google",
+  passport.authenticate("google", { scope: ["email", "profile"] })
+);
+
 app.get(
   "/auth/google/callback",
   passport.authenticate("google", {
-    failureRedirect: "/failed",
+    failureRedirect: "https://salon-gg-client.vercel.app",
+    session: true,
   }),
   function (req, res) {
     res.redirect("https://salon-gg-client.vercel.app");
   }
 );
 
-// failed route if the authentication fails
-app.get("/failed", (req, res) => {
-  console.log("User is not authenticated");
-  res.send("Failed");
+app.get("/", (req, res) => {
+  res.send("Helllo WOlrd");
 });
 
-// Success route if the authentication is successful
-app.get("/success", isLoggedIn, (req, res) => {
-  console.log("You are logged in");
+app.get("/getuser", (req, res) => {
   res.send(req.user);
 });
 
-// Route that logs out the authenticated user
 app.get("/auth/logout", (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      console.log("Error while destroying session:", err);
-    } else {
-      req.logout(() => {
-        console.log("You are logged out");
-        res.redirect("https://salon-gg-client.vercel.app");
-      });
-    }
-  });
+  if (req.user) {
+    req.logout();
+    res.send("done");
+  }
 });
 
-app.listen(port, () => console.log("server running on port" + port));
+app.listen(process.env.PORT || 5000, () => {
+  console.log("Server Starrted");
+});
