@@ -19,7 +19,7 @@ app.set("trust proxy", 1);
 
 app.use(
   session({
-    secret: "secretcode",
+    secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: true,
     cookie: {
@@ -81,9 +81,9 @@ app.get("/getuser", (req, res) => {
 app.get("/auth/logout", (req, res) => {
   req.logout();
 
-  if (req.user) {
-    return res.send("done");
-  }
+  // if (req.user) {
+  //   return res.send("done");
+  // }
   res.send("logout");
 });
 
