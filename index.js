@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import session from "express-session";
 import passport from "passport";
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
+import {Strategy} from "passport-google-oauth20"
 
 dotenv.config();
 
@@ -42,7 +42,7 @@ passport.deserializeUser((user, done) => {
 });
 
 passport.use(
-  new GoogleStrategy(
+  new Strategy(
     {
       clientID: `${process.env.GOOGLE_CLIENT_ID}`,
       clientSecret: `${process.env.GOOGLE_CLIENT_SECRET}`,
