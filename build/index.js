@@ -8,15 +8,18 @@ var dotenv_1 = __importDefault(require("dotenv"));
 var cors_1 = __importDefault(require("cors"));
 var express_session_1 = __importDefault(require("express-session"));
 var passport_1 = __importDefault(require("passport"));
+var mongoose_1 = __importDefault(require("mongoose"));
 //
 var corsOptions_1 = require("./config/corsOptions");
 var auth_route_1 = __importDefault(require("./routes/auth.route"));
+var dbConnect_1 = __importDefault(require("./config/dbConnect"));
 //
 dotenv_1.default.config();
 require("./config/passport");
 //
 //
 var app = (0, express_1.default)();
+(0, dbConnect_1.default)();
 // Middleware
 app.use(express_1.default.json());
 // cors
@@ -36,12 +39,14 @@ app.use((0, express_session_1.default)({
 //passport
 app.use(passport_1.default.initialize());
 app.use(passport_1.default.session());
-//!PASSPORT here
 // routes
 app.get("/", function (req, res) {
     res.send("Helllo WOlrd");
 });
 app.use("/auth", auth_route_1.default);
-app.listen(process.env.PORT || 5000, function () {
-    console.log("Server Starrted");
+mongoose_1.default.connection.once("open", function () {
+    console.log("MongoDB connection open");
+    app.listen(process.env.PORT || 5000, function () {
+        console.log("Server Started");
+    });
 });

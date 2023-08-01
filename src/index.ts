@@ -3,15 +3,18 @@ import dotenv from "dotenv";
 import cors from "cors";
 import session from "express-session";
 import passport from "passport";
+import mongoose from "mongoose";
 //
 import { corsOptions } from "./config/corsOptions";
 import authRouter from "./routes/auth.route";
+import connectDB from "./config/dbConnect";
 //
 dotenv.config();
 import "./config/passport";
 //
 //
 const app = express();
+connectDB()
 // Middleware
 app.use(express.json());
 // cors
@@ -34,16 +37,15 @@ app.use(
 //passport
 app.use(passport.initialize());
 app.use(passport.session());
-
-//!PASSPORT here
 // routes
 app.get("/", (req, res) => {
   res.send("Helllo WOlrd");
 });
 app.use("/auth", authRouter);
 
-
-
-app.listen(process.env.PORT || 5000, () => {
-  console.log("Server Starrted");
+mongoose.connection.once("open", () => {
+  console.log("MongoDB connection open");
+  app.listen(process.env.PORT || 5000, () => {
+    console.log("Server Started");
+  });
 });
