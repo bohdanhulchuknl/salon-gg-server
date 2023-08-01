@@ -17,6 +17,7 @@ authRouter.get("/getuser", function (req, res) {
     res.send(req.user);
 });
 authRouter.get("/logout", function (req, res, next) {
+    //here
     req.logout(function (err) {
         if (err) {
             return next(err);

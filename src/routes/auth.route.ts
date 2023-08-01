@@ -24,6 +24,7 @@ authRouter.get("/getuser", (req, res) => {
 });
 
 authRouter.get("/logout", (req, res, next) => {
+    //here
   req.logout(function (err) {
     if (err) {
       return next(err);
