@@ -3,9 +3,10 @@ import passport from "passport";
 
 const authRouter = Router();
 
+//! "https://www.googleapis.com/auth/user.phonenumbers.read" отримати доступ 
 authRouter.get(
   "/google",
-  passport.authenticate("google", { scope: ["email", "profile", "https://www.googleapis.com/auth/user.phonenumbers.read"] })
+  passport.authenticate("google", { scope: ["email", "profile"] })
 );
 
 authRouter.get(

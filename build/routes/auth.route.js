@@ -6,7 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var passport_1 = __importDefault(require("passport"));
 var authRouter = (0, express_1.Router)();
-authRouter.get("/google", passport_1.default.authenticate("google", { scope: ["email", "profile", "https://www.googleapis.com/auth/user.phonenumbers.read"] }));
+//! "https://www.googleapis.com/auth/user.phonenumbers.read" отримати доступ 
+authRouter.get("/google", passport_1.default.authenticate("google", { scope: ["email", "profile"] }));
 authRouter.get("/google/callback", passport_1.default.authenticate("google", {
     failureRedirect: "https://salon-gg-client.vercel.app",
     session: true,
