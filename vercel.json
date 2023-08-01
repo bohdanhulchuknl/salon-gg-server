@@ -1,6 +1,9 @@
 {
     "version": 2,
     "name": "server_third",
+    "buildCommand": "npm run build",
+    "devCommand": "npm run start",
+    "outputDirectory": "build",
     "builds": [
        { "src": "build/index.js", "use": "@vercel/node", "config": { "includeFiles": ["build/**"] } }
     ],
