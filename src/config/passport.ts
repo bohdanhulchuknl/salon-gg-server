@@ -21,6 +21,7 @@ passport.use(
       User.findOne({ googleId: profile.id }).then((currentUser) => {
         if (currentUser) {
           console.log(currentUser, "ex");
+          delete currentUser.__v
           return cb(null, currentUser);
         } else {
           new User({
@@ -39,6 +40,7 @@ passport.use(
             .save()
             .then((newUser) => {
               console.log(newUser, "create");
+              delete newUser.__v
               return cb(null, newUser);
             });
         }

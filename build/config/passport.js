@@ -20,6 +20,7 @@ passport_1.default.use(new passport_google_oauth20_1.Strategy({
     User_model_1.default.findOne({ googleId: profile.id }).then(function (currentUser) {
         if (currentUser) {
             console.log(currentUser, "ex");
+            delete currentUser.__v;
             return cb(null, currentUser);
         }
         else {
@@ -39,6 +40,7 @@ passport_1.default.use(new passport_google_oauth20_1.Strategy({
                 .save()
                 .then(function (newUser) {
                 console.log(newUser, "create");
+                delete newUser.__v;
                 return cb(null, newUser);
             });
         }
