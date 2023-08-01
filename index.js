@@ -8,7 +8,7 @@ import {Strategy} from "passport-google-oauth20"
 dotenv.config();
 
 const app = express();
-
+console.log("test dev")
 // Middleware
 app.use(express.json());
 app.use(
