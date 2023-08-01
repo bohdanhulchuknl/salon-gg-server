@@ -1,6 +1,7 @@
 import passport from "passport";
 import { Strategy } from "passport-google-oauth20";
 import User from "../models/User.model";
+import { getClearDbUser } from "../services/user.service";
 
 passport.serializeUser((user, done) => {
   return done(null, user);
@@ -18,11 +19,10 @@ passport.use(
       callbackURL: "/auth/google/callback",
     },
     function (_, __, profile, cb) {
-      User.findOne({ googleId: profile.id }).then((currentUser) => {
+      User.findOne({ googleId: profile.id }).then((currentUser:any) => {
         if (currentUser) {
           console.log(currentUser, "ex");
-          delete currentUser.__v
-          return cb(null, currentUser);
+          return cb(null, getClearDbUser(currentUser));
         } else {
           new User({
             googleId: profile.id,
@@ -38,10 +38,9 @@ passport.use(
             },
           })
             .save()
-            .then((newUser) => {
+            .then((newUser:any) => {
               console.log(newUser, "create");
-              delete newUser.__v
-              return cb(null, newUser);
+              return cb(null, getClearDbUser(newUser));
             });
         }
       });

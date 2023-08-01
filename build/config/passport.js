@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var passport_1 = __importDefault(require("passport"));
 var passport_google_oauth20_1 = require("passport-google-oauth20");
 var User_model_1 = __importDefault(require("../models/User.model"));
+var user_service_1 = require("../services/user.service");
 passport_1.default.serializeUser(function (user, done) {
     return done(null, user);
 });
@@ -20,8 +21,7 @@ passport_1.default.use(new passport_google_oauth20_1.Strategy({
     User_model_1.default.findOne({ googleId: profile.id }).then(function (currentUser) {
         if (currentUser) {
             console.log(currentUser, "ex");
-            delete currentUser.__v;
-            return cb(null, currentUser);
+            return cb(null, (0, user_service_1.getClearDbUser)(currentUser));
         }
         else {
             new User_model_1.default({
@@ -40,8 +40,7 @@ passport_1.default.use(new passport_google_oauth20_1.Strategy({
                 .save()
                 .then(function (newUser) {
                 console.log(newUser, "create");
-                delete newUser.__v;
-                return cb(null, newUser);
+                return cb(null, (0, user_service_1.getClearDbUser)(newUser));
             });
         }
     });

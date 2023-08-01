@@ -28,7 +28,7 @@ var userSchema = new mongoose_1.Schema({
                 },
             },
         ],
-        default: [],
+        default: [{ value: '', verified: false }],
     },
     phone: {
         type: Object,

@@ -27,7 +27,7 @@ const userSchema = new Schema({
         },
       },
     ],
-    default: [],
+    default: [{value: '', verified: false}],
   },
   phone: {
     type: Object,
