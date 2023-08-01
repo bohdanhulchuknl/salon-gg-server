@@ -8,7 +8,7 @@ import {Strategy} from "passport-google-oauth20"
 dotenv.config();
 
 const app = express();
-console.log("test dev")
+
 // Middleware
 app.use(express.json());
 app.use(
@@ -19,7 +19,7 @@ app.set("trust proxy", 1);
 
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET as string,
     resave: true,
     saveUninitialized: true,
     cookie: {
@@ -37,7 +37,7 @@ passport.serializeUser((user, done) => {
   return done(null, user);
 });
 
-passport.deserializeUser((user, done) => {
+passport.deserializeUser((user:any, done) => {
   return done(null, user);
 });
 
@@ -78,7 +78,7 @@ app.get("/getuser", (req, res) => {
   res.send(req.user);
 });
 
-app.get("/auth/logout", (req, res) => {
+app.get("/auth/logout", (req, res, next) => {
   // console.log("here")
   // req.logout();
 
