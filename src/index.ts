@@ -3,7 +3,9 @@ import dotenv from "dotenv";
 import cors from "cors";
 import session from "express-session";
 import passport from "passport";
-import {Strategy} from "passport-google-oauth20"
+import { Strategy } from "passport-google-oauth20";
+
+import { corsOptions } from "./config/corsOptions";
 
 dotenv.config();
 
@@ -11,8 +13,9 @@ const app = express();
 
 // Middleware
 app.use(express.json());
+// cors
 app.use(
-  cors({ origin: "https://salon-gg-client.vercel.app", credentials: true })
+  cors(corsOptions)
 );
 
 app.set("trust proxy", 1);
@@ -37,7 +40,7 @@ passport.serializeUser((user, done) => {
   return done(null, user);
 });
 
-passport.deserializeUser((user:any, done) => {
+passport.deserializeUser((user: any, done) => {
   return done(null, user);
 });
 
@@ -86,8 +89,10 @@ app.get("/auth/logout", (req, res, next) => {
   // //   return res.send("done");
   // // }
   // res.send("logout");
-  req.logout(function(err) {
-    if (err) { return next(err); }
+  req.logout(function (err) {
+    if (err) {
+      return next(err);
+    }
     res.send("done");
   });
 });

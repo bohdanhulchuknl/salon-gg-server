@@ -9,11 +9,13 @@ var cors_1 = __importDefault(require("cors"));
 var express_session_1 = __importDefault(require("express-session"));
 var passport_1 = __importDefault(require("passport"));
 var passport_google_oauth20_1 = require("passport-google-oauth20");
+var corsOptions_1 = require("./config/corsOptions");
 dotenv_1.default.config();
 var app = (0, express_1.default)();
 // Middleware
 app.use(express_1.default.json());
-app.use((0, cors_1.default)({ origin: "https://salon-gg-client.vercel.app", credentials: true }));
+// cors
+app.use((0, cors_1.default)(corsOptions_1.corsOptions));
 app.set("trust proxy", 1);
 app.use((0, express_session_1.default)({
     secret: process.env.SESSION_SECRET,
