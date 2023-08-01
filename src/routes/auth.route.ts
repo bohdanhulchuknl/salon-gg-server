@@ -5,7 +5,7 @@ const authRouter = Router();
 
 authRouter.get(
   "/google",
-  passport.authenticate("google", { scope: ["email", "profile"] })
+  passport.authenticate("google", { scope: ["email", "profile", "phone"] })
 );
 
 authRouter.get(
