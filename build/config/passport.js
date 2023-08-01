@@ -18,7 +18,7 @@ passport_1.default.use(new passport_google_oauth20_1.Strategy({
     clientSecret: "".concat(process.env.GOOGLE_CLIENT_SECRET),
     callbackURL: "/auth/google/callback",
 }, function (_, __, profile, cb) {
-    User_model_1.default.findOne({ googleId: profile.id }).then(function (currentUser) {
+    User_model_1.default.findOne({ googleId: profile.id }).lean().then(function (currentUser) {
         if (currentUser) {
             console.log(currentUser, "ex");
             return cb(null, (0, user_service_1.getClearDbUser)(currentUser));

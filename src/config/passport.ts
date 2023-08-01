@@ -19,7 +19,7 @@ passport.use(
       callbackURL: "/auth/google/callback",
     },
     function (_, __, profile, cb) {
-      User.findOne({ googleId: profile.id }).then((currentUser:any) => {
+      User.findOne({ googleId: profile.id }).lean().then((currentUser:any) => {
         if (currentUser) {
           console.log(currentUser, "ex");
           return cb(null, getClearDbUser(currentUser));
