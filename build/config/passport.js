@@ -40,7 +40,7 @@ passport_1.default.use(new passport_google_oauth20_1.Strategy({
                 .save()
                 .then(function (newUser) {
                 console.log(newUser, "create");
-                return cb(null, (0, user_service_1.getClearDbUser)(newUser));
+                return cb(null, (0, user_service_1.getClearDbUser)(newUser._doc));
             });
         }
     });

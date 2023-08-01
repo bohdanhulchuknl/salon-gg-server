@@ -40,7 +40,7 @@ passport.use(
             .save()
             .then((newUser:any) => {
               console.log(newUser, "create");
-              return cb(null, getClearDbUser(newUser));
+              return cb(null, getClearDbUser(newUser._doc));
             });
         }
       });
