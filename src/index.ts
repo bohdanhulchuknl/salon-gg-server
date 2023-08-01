@@ -37,11 +37,12 @@ app.use(passport.session());
 
 //!PASSPORT here
 // routes
-app.use("/auth", authRouter);
-
 app.get("/", (req, res) => {
   res.send("Helllo WOlrd");
 });
+app.use("/auth", authRouter);
+
+
 
 app.listen(process.env.PORT || 5000, () => {
   console.log("Server Starrted");

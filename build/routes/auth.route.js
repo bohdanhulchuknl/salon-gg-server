@@ -16,7 +16,7 @@ authRouter.get("/google/callback", passport_1.default.authenticate("google", {
 authRouter.get("/getuser", function (req, res) {
     res.send(req.user);
 });
-authRouter.get("/auth/logout", function (req, res, next) {
+authRouter.get("/logout", function (req, res, next) {
     req.logout(function (err) {
         if (err) {
             return next(err);

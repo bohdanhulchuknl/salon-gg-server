@@ -38,10 +38,10 @@ app.use(passport_1.default.initialize());
 app.use(passport_1.default.session());
 //!PASSPORT here
 // routes
-app.use("/auth", auth_route_1.default);
 app.get("/", function (req, res) {
     res.send("Helllo WOlrd");
 });
+app.use("/auth", auth_route_1.default);
 app.listen(process.env.PORT || 5000, function () {
     console.log("Server Starrted");
 });

@@ -23,7 +23,7 @@ authRouter.get("/getuser", (req, res) => {
   res.send(req.user);
 });
 
-authRouter.get("/auth/logout", (req, res, next) => {
+authRouter.get("/logout", (req, res, next) => {
   req.logout(function (err) {
     if (err) {
       return next(err);
