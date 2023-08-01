@@ -1,28 +1,49 @@
 import { Schema, model } from "mongoose";
 
 const userSchema = new Schema({
-  username: { type: String, required: [true, "Username is required"] },
+  name: String,
   googleId: {
     type: String,
     default: "",
   },
-  picture: String,
+  picture: {
+    type: String,
+    default: "",
+  },
   locale: {
     type: String,
     default: "ru",
   },
-  email: {
-    type: String,
-    default: "",
+  emails: {
+    type: [
+      {
+        value: {
+            type: String,
+            default: ''
+        },
+        verified: {
+            type: Boolean,
+            default: false
+        },
+      },
+    ],
+    default: [],
   },
   phone: {
-    type: String,
-    default: "",
+    type: Object,
+    value: {
+        type: String,
+        default: ''
+    },
+    verified: {
+        type: Boolean,
+        default: false
+    }
   },
   roles: {
     type: Array,
-    default: [2001]
-  }
+    default: [2001],
+  },
 });
 
 const User = model("User", userSchema);
