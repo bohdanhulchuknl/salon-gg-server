@@ -7,14 +7,18 @@ import mongoose from "mongoose";
 //
 import { corsOptions } from "./config/corsOptions";
 import authRouter from "./routes/auth.route";
+import serviceRouter from "./routes/services.route";
 import connectDB from "./config/dbConnect";
 //
 dotenv.config();
 import "./config/passport";
+import orderRouter from "./routes/order.route";
+import editorRouter from "./routes/editor.route";
 //
 //
 const app = express();
-connectDB()
+const PORT = process.env.PORT || 5000;
+connectDB();
 // Middleware
 app.use(express.json());
 // cors
@@ -42,10 +46,13 @@ app.get("/", (req, res) => {
   res.send("Helllo WOlrd");
 });
 app.use("/auth", authRouter);
+app.use("/service", serviceRouter);
+app.use("/order", orderRouter);
+app.use("/editor", editorRouter);
 
 mongoose.connection.once("open", () => {
   console.log("MongoDB connection open");
-  app.listen(process.env.PORT || 5000, () => {
-    console.log("Server Started");
+  app.listen(PORT, () => {
+    console.log(`Server Started on port: ${PORT}`);
   });
 });

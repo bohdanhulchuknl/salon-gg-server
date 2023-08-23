@@ -39,60 +39,58 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var passport_1 = __importDefault(require("passport"));
-var passport_google_oauth20_1 = require("passport-google-oauth20");
+exports.checkIsPropsExistInDB = exports.checkProvideBodyCreateOrder = void 0;
 var User_model_1 = __importDefault(require("../models/User.model"));
 var Editor_model_1 = __importDefault(require("../models/Editor.model"));
-passport_1.default.serializeUser(function (user, done) {
-    return done(null, user);
-});
-passport_1.default.deserializeUser(function (user, done) {
-    return done(null, user);
-});
-passport_1.default.use(new passport_google_oauth20_1.Strategy({
-    clientID: "".concat(process.env.GOOGLE_CLIENT_ID),
-    clientSecret: "".concat(process.env.GOOGLE_CLIENT_SECRET),
-    callbackURL: "/auth/google/callback",
-}, function (_, __, profile, cb) {
-    return __awaiter(this, void 0, void 0, function () {
-        var editor;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, Editor_model_1.default.findOne({ googleId: profile.id }).lean()];
-                case 1:
-                    editor = _a.sent();
-                    if (editor)
-                        return [2 /*return*/, cb(null, editor)];
-                    User_model_1.default.findOne({ googleId: profile.id })
-                        .lean()
-                        .then(function (currentUser) {
-                        if (currentUser) {
-                            console.log(currentUser, "ex");
-                            return cb(null, currentUser);
-                        }
-                        else {
-                            new User_model_1.default({
-                                googleId: profile.id,
-                                name: profile.displayName,
-                                locale: profile._json.locale,
-                                picture: profile._json.picture,
-                                emails: profile.emails
-                                    ? profile.emails
-                                    : [{ value: "", verified: false }],
-                                phone: {
-                                    value: "",
-                                    verified: false,
-                                },
-                            })
-                                .save()
-                                .then(function (newUser) {
-                                console.log(newUser.lean(), "create");
-                                return cb(null, newUser.lean());
-                            });
-                        }
-                    });
-                    return [2 /*return*/];
-            }
-        });
+var Service_model_1 = __importDefault(require("../models/Service.model"));
+var checkProvideBodyCreateOrder = function (req) {
+    var _a = req.body, fromUser = _a.fromUser, toEditor = _a.toEditor, services = _a.services, totalPrice = _a.totalPrice, totalTime = _a.totalTime, start = _a.start, end = _a.end;
+    if (!fromUser.trim())
+        throw new Error("fromUser don`t provide");
+    if (!toEditor.trim())
+        throw new Error("toEditor don`t provide");
+    if (!services.length)
+        throw new Error("Services can`t be empty");
+    if (!totalPrice) {
+        throw new Error("totalPrice don`t provide");
+    }
+    else {
+        if (totalPrice > 0)
+            throw new Error("totalPrice must be > 0");
+    }
+    if (!totalTime) {
+        throw new Error("totalTime don`t provide");
+    }
+    else {
+        if (totalTime > 0)
+            throw new Error("totalTime must be > 0");
+    }
+    if (!start || !start.length)
+        throw new Error("Order start don`t provide");
+    if (!end || !end.length)
+        throw new Error("Order end don`t provide");
+};
+exports.checkProvideBodyCreateOrder = checkProvideBodyCreateOrder;
+var checkIsPropsExistInDB = function (fromUser, toEditor, services) { return __awaiter(void 0, void 0, void 0, function () {
+    var user, editor, servicesInDB;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, User_model_1.default.findById(fromUser)];
+            case 1:
+                user = _a.sent();
+                if (!user)
+                    throw new Error("User with id ".concat(fromUser, " don't exist"));
+                return [4 /*yield*/, Editor_model_1.default.findById(toEditor)];
+            case 2:
+                editor = _a.sent();
+                if (!editor)
+                    throw new Error("Editor with id ".concat(toEditor, " don't exist"));
+                return [4 /*yield*/, Service_model_1.default.find({ '_id': { $in: services } })];
+            case 3:
+                servicesInDB = _a.sent();
+                console.log(servicesInDB);
+                return [2 /*return*/];
+        }
     });
-}));
+}); };
+exports.checkIsPropsExistInDB = checkIsPropsExistInDB;

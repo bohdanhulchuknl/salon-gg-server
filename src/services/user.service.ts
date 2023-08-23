@@ -1,6 +1,6 @@
-import { IUser, IUserDB } from "../types/user.types";
+import { IUser } from "../types/user.types";
 
-export const getClearDbUser = (dbUser: IUserDB) => {
+export const getClearDbUser = (dbUser:any) => {
   const { __v, _id, ...rest } = dbUser;
   const clearUser: IUser = rest;
   return clearUser;

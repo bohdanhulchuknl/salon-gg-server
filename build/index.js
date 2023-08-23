@@ -12,13 +12,17 @@ var mongoose_1 = __importDefault(require("mongoose"));
 //
 var corsOptions_1 = require("./config/corsOptions");
 var auth_route_1 = __importDefault(require("./routes/auth.route"));
+var services_route_1 = __importDefault(require("./routes/services.route"));
 var dbConnect_1 = __importDefault(require("./config/dbConnect"));
 //
 dotenv_1.default.config();
 require("./config/passport");
+var order_route_1 = __importDefault(require("./routes/order.route"));
+var editor_route_1 = __importDefault(require("./routes/editor.route"));
 //
 //
 var app = (0, express_1.default)();
+var PORT = process.env.PORT || 5000;
 (0, dbConnect_1.default)();
 // Middleware
 app.use(express_1.default.json());
@@ -44,9 +48,12 @@ app.get("/", function (req, res) {
     res.send("Helllo WOlrd");
 });
 app.use("/auth", auth_route_1.default);
+app.use("/service", services_route_1.default);
+app.use("/order", order_route_1.default);
+app.use("/editor", editor_route_1.default);
 mongoose_1.default.connection.once("open", function () {
     console.log("MongoDB connection open");
-    app.listen(process.env.PORT || 5000, function () {
-        console.log("Server Started");
+    app.listen(PORT, function () {
+        console.log("Server Started on port: ".concat(PORT));
     });
 });

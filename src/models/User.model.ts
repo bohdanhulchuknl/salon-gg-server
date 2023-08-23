@@ -1,7 +1,10 @@
 import { Schema, model } from "mongoose";
 
 const userSchema = new Schema({
-  name: String,
+  name: {
+    type: String,
+    required: true
+  },
   googleId: {
     type: String,
     default: "",
@@ -43,6 +46,10 @@ const userSchema = new Schema({
   roles: {
     type: Array,
     default: [2001],
+  },
+  orders: {
+    type: [{ type: Schema.Types.ObjectId, ref: "Order" }],
+    default: [],
   },
 });
 

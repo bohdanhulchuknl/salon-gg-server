@@ -1,4 +1,4 @@
-import { ObjectId } from "mongoose";
+import { Types } from "mongoose";
 
 export interface IUser {
   name: string;
@@ -6,10 +6,59 @@ export interface IUser {
   picture: string;
   locale: string;
   emails: { value: string; verified: boolean }[];
-  phone: { value: string; verified: boolean };
+  phone?: { value: string; verified: boolean };
+  roles: number[];
+  orders?: Types.ObjectId[];
 }
 
-export interface IUserDB extends IUser {
-  _id: ObjectId;
-  __v: number;
+
+export interface IService {
+  title: {
+    ua: string;
+    pl: string;
+  };
+  price: {
+    junior: number;
+    middle: number;
+    senior: number;
+  };
+  time: number;
+}
+
+export interface IWork {
+  title: string;
+  serviceGroup: string;
+  variant: string;
+  editor: string;
+  img: string;
+}
+
+export interface IComment {
+  from: IUser;
+  to: IEditor;
+  title: string;
+  text: string;
+}
+
+export interface IOrder {
+  fromUser: IUser;
+  toEditor: IEditor;
+  services: IService[];
+  totalPrice: number;
+  totalTime: number;
+  start: string;
+  end: string;
+  number: number
+}
+
+export interface IEditor extends IUser {
+  rang: string;
+}
+
+export interface IServiceGroup {
+  title: {
+    ua: string;
+    pl: string;
+  };
+  variants: IService[];
 }
