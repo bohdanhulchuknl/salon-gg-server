@@ -93,13 +93,13 @@ var checkIsServicesExist = function (services) { return __awaiter(void 0, void 0
     });
 }); };
 exports.checkIsServicesExist = checkIsServicesExist;
-var storeEditorInDB = function (userFromDB, services, rang, comments, works) { return __awaiter(void 0, void 0, void 0, function () {
+var storeEditorInDB = function (userFromDB, services, rang, comments, works, userId) { return __awaiter(void 0, void 0, void 0, function () {
     var roles, name, googleId, picture, locale, emails, phone, newEditor, err_2;
     var _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                _b.trys.push([0, 2, , 3]);
+                _b.trys.push([0, 3, , 4]);
                 roles = userFromDB.roles, name = userFromDB.name, googleId = userFromDB.googleId, picture = userFromDB.picture, locale = userFromDB.locale, emails = userFromDB.emails, phone = userFromDB.phone;
                 newEditor = new Editor_model_1.default({
                     name: name,
@@ -116,11 +116,16 @@ var storeEditorInDB = function (userFromDB, services, rang, comments, works) { r
                     works: works.length ? works : [],
                 });
                 return [4 /*yield*/, newEditor.save()];
-            case 1: return [2 /*return*/, _b.sent()];
+            case 1:
+                _b.sent();
+                return [4 /*yield*/, User_model_1.default.deleteOne({ _id: userId })];
             case 2:
+                _b.sent();
+                return [2 /*return*/, newEditor];
+            case 3:
                 err_2 = _b.sent();
                 throw new Error((_a = err_2.message) !== null && _a !== void 0 ? _a : "Some problem with store Editor is DB");
-            case 3: return [2 /*return*/];
+            case 4: return [2 /*return*/];
         }
     });
 }); };

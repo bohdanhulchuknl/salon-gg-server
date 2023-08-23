@@ -58,7 +58,7 @@ var createEditor = function (req, res) { return __awaiter(void 0, void 0, void 0
                     if (!Object.values(constants_1.EDITOR_RANG).includes(rang))
                         throw new Error("Editor rank ".concat(rang, " isn't correct"));
                 }
-                return [4 /*yield*/, (0, editor_service_1.storeEditorInDB)(userFromDB, services, rang, comments, works)];
+                return [4 /*yield*/, (0, editor_service_1.storeEditorInDB)(userFromDB, services, rang, comments, works, userId)];
             case 3:
                 newEditor = _d.sent();
                 res.status(200).json(newEditor);

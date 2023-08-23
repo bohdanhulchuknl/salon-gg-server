@@ -31,7 +31,8 @@ export const storeEditorInDB = async (
   services: string[],
   rang: string,
   comments: string[],
-  works: string[]
+  works: string[],
+  userId: string
 ) => {
   try {
     const { roles, name, googleId, picture, locale, emails, phone } =
@@ -50,7 +51,9 @@ export const storeEditorInDB = async (
       comments: comments.length ? comments : [],
       works: works.length ? works : [],
     });
-    return await newEditor.save();
+    await newEditor.save();
+    await User.deleteOne({ _id: userId });
+    return newEditor;
   } catch (err: any) {
     throw new Error(err.message ?? "Some problem with store Editor is DB");
   }

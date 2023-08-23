@@ -18,7 +18,7 @@ export const createEditor = async (req: Request, res: Response) => {
       if (!Object.values(EDITOR_RANG).includes(rang))
         throw new Error(`Editor rank ${rang} isn't correct`);
     }
-    const newEditor = await storeEditorInDB(userFromDB, services, rang, comments, works)
+    const newEditor = await storeEditorInDB(userFromDB, services, rang, comments, works, userId)
     res.status(200).json(newEditor);
   } catch (err: any) {
     res.status(err.status ?? 500).json(err.message ?? "Some went wrong");
