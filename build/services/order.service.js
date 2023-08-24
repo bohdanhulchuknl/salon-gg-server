@@ -39,10 +39,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkIsPropsExistInDB = exports.checkProvideBodyCreateOrder = void 0;
+exports.storeOrderInDB = exports.checkIsPropsExistInDB = exports.checkProvideBodyCreateOrder = void 0;
 var User_model_1 = __importDefault(require("../models/User.model"));
 var Editor_model_1 = __importDefault(require("../models/Editor.model"));
 var Service_model_1 = __importDefault(require("../models/Service.model"));
+var Order_model_1 = __importDefault(require("../models/Order.model"));
+var constants_1 = require("../config/constants");
 var checkProvideBodyCreateOrder = function (req) {
     var _a = req.body, fromUser = _a.fromUser, toEditor = _a.toEditor, services = _a.services, totalPrice = _a.totalPrice, totalTime = _a.totalTime, start = _a.start, end = _a.end;
     if (!fromUser.trim())
@@ -55,14 +57,14 @@ var checkProvideBodyCreateOrder = function (req) {
         throw new Error("totalPrice don`t provide");
     }
     else {
-        if (totalPrice > 0)
+        if (totalPrice <= 0)
             throw new Error("totalPrice must be > 0");
     }
     if (!totalTime) {
         throw new Error("totalTime don`t provide");
     }
     else {
-        if (totalTime > 0)
+        if (totalTime <= 0)
             throw new Error("totalTime must be > 0");
     }
     if (!start || !start.length)
@@ -72,10 +74,12 @@ var checkProvideBodyCreateOrder = function (req) {
 };
 exports.checkProvideBodyCreateOrder = checkProvideBodyCreateOrder;
 var checkIsPropsExistInDB = function (fromUser, toEditor, services) { return __awaiter(void 0, void 0, void 0, function () {
-    var user, editor, servicesInDB;
+    var user, editor, err_1, err_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, User_model_1.default.findById(fromUser)];
+            case 0:
+                _a.trys.push([0, 7, , 8]);
+                return [4 /*yield*/, User_model_1.default.findById(fromUser)];
             case 1:
                 user = _a.sent();
                 if (!user)
@@ -85,12 +89,67 @@ var checkIsPropsExistInDB = function (fromUser, toEditor, services) { return __a
                 editor = _a.sent();
                 if (!editor)
                     throw new Error("Editor with id ".concat(toEditor, " don't exist"));
-                return [4 /*yield*/, Service_model_1.default.find({ '_id': { $in: services } })];
+                _a.label = 3;
             case 3:
-                servicesInDB = _a.sent();
-                console.log(servicesInDB);
-                return [2 /*return*/];
+                _a.trys.push([3, 5, , 6]);
+                return [4 /*yield*/, Service_model_1.default.find({ _id: { $in: services } })];
+            case 4:
+                _a.sent();
+                return [3 /*break*/, 6];
+            case 5:
+                err_1 = _a.sent();
+                throw new Error("Service with id ".concat(err_1.value, " don't exist"));
+            case 6: return [3 /*break*/, 8];
+            case 7:
+                err_2 = _a.sent();
+                throw new Error(err_2.message);
+            case 8: return [2 /*return*/];
         }
     });
 }); };
 exports.checkIsPropsExistInDB = checkIsPropsExistInDB;
+var storeOrderInDB = function (fromUser, toEditor, services, totalPrice, totalTime, start, end) { return __awaiter(void 0, void 0, void 0, function () {
+    var newOrder, user, editor, err_3;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 6, , 7]);
+                newOrder = new Order_model_1.default({
+                    fromUser: fromUser,
+                    toEditor: toEditor,
+                    services: services,
+                    totalPrice: totalPrice,
+                    totalTime: totalTime,
+                    start: start,
+                    end: end,
+                    status: {
+                        title: constants_1.ORDER_STATUSES.pending.title,
+                        text: constants_1.ORDER_STATUSES.pending.text.admin,
+                    },
+                });
+                return [4 /*yield*/, newOrder.save()];
+            case 1:
+                _a.sent();
+                return [4 /*yield*/, User_model_1.default.findById(fromUser)];
+            case 2:
+                user = _a.sent();
+                user === null || user === void 0 ? void 0 : user.orders.push(newOrder._id);
+                return [4 /*yield*/, (user === null || user === void 0 ? void 0 : user.save())];
+            case 3:
+                _a.sent();
+                return [4 /*yield*/, Editor_model_1.default.findById(toEditor)];
+            case 4:
+                editor = _a.sent();
+                editor === null || editor === void 0 ? void 0 : editor.orders.push(newOrder._id);
+                return [4 /*yield*/, (editor === null || editor === void 0 ? void 0 : editor.save())];
+            case 5:
+                _a.sent();
+                return [2 /*return*/, newOrder];
+            case 6:
+                err_3 = _a.sent();
+                throw new Error(err_3.message);
+            case 7: return [2 /*return*/];
+        }
+    });
+}); };
+exports.storeOrderInDB = storeOrderInDB;

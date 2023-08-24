@@ -9,7 +9,12 @@ var orderSchema = new mongoose_1.Schema({
     totalTime: Number,
     start: String,
     end: String,
-    number: Number
+    number: Number,
+    status: {
+        type: Object,
+        title: String,
+        text: String,
+    },
 });
 var Order = (0, mongoose_1.model)("Order", orderSchema);
 exports.default = Order;

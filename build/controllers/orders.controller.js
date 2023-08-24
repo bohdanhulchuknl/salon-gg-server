@@ -39,24 +39,27 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createOrder = void 0;
 var order_service_1 = require("../services/order.service");
 var createOrder = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, fromUser, toEditor, services, totalPrice, totalTime, start, end, err_1;
+    var _a, fromUser, toEditor, services, totalPrice, totalTime, start, end, newOrder, err_1;
     var _b, _c;
     return __generator(this, function (_d) {
         switch (_d.label) {
             case 0:
-                _d.trys.push([0, 2, , 3]);
+                _d.trys.push([0, 3, , 4]);
                 (0, order_service_1.checkProvideBodyCreateOrder)(req);
                 _a = req.body, fromUser = _a.fromUser, toEditor = _a.toEditor, services = _a.services, totalPrice = _a.totalPrice, totalTime = _a.totalTime, start = _a.start, end = _a.end;
                 return [4 /*yield*/, (0, order_service_1.checkIsPropsExistInDB)(fromUser, toEditor, services)];
             case 1:
                 _d.sent();
-                res.status(200).json("ok");
-                return [3 /*break*/, 3];
+                return [4 /*yield*/, (0, order_service_1.storeOrderInDB)(fromUser, toEditor, services, totalPrice, totalTime, start, end)];
             case 2:
+                newOrder = _d.sent();
+                res.status(200).json(newOrder);
+                return [3 /*break*/, 4];
+            case 3:
                 err_1 = _d.sent();
                 res.status((_b = err_1.status) !== null && _b !== void 0 ? _b : 500).json((_c = err_1.message) !== null && _c !== void 0 ? _c : "Some server Error");
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
         }
     });
 }); };

@@ -11,7 +11,6 @@ export interface IUser {
   orders?: Types.ObjectId[];
 }
 
-
 export interface IService {
   title: {
     ua: string;
@@ -48,7 +47,8 @@ export interface IOrder {
   totalTime: number;
   start: string;
   end: string;
-  number: number
+  number: number;
+  status: string;
 }
 
 export interface IEditor extends IUser {
